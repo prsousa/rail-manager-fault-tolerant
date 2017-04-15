@@ -13,9 +13,9 @@ Details at `enunciado.pdf`.
 1. Start `spread` server on `localhost` at port `4803`.
 2. `mvn compile` to compile
 3. Run
-	1. replica: `./run RailManagerServer <srvName> [isFirst]`
-	2. remote client: `./run TestRemote`
-	3. local client: `./run TestLocal`
+	1. replica: `./runUnix RailManagerServer <srvName> [isFirst]`
+	2. remote client: `./runUnix TestRemote`
+	3. local client: `./runUnix TestLocal`
 
 
 ## Authors
