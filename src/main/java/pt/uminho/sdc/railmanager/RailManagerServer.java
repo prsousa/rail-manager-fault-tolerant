@@ -23,8 +23,8 @@ public class RailManagerServer {
             logger.debug("Seeding RailManager");
             railManager.addRail("Nine-Braga", new Rail(5));
             railManager.addRail("Braga-Nine", new Rail(5));
-            railManager.addRail("Viana-Nine", new Rail(10));
-            railManager.addRail("Nine-Viana", new Rail(10));
+            railManager.addRail("Viana-Porto", new Rail(10));
+            railManager.addRail("Porto-Viana", new Rail(10));
         }
 
         new SocketServer<>(args[0], firstServer, railManager).serve();
