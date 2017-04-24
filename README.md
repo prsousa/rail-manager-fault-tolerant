@@ -5,7 +5,7 @@ Details at `enunciado.pdf`.
 ## Features
 
 * Active Replication (servers)
-* Communication protocol using [spread](http://www.spread.org/).
+* Communication protocol using [spread](http://www.spread.org/) (Version **4.04.00** Built 27/May/2014).
 * 
 
 ## Usage

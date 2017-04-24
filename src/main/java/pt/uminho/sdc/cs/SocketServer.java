@@ -75,7 +75,7 @@ public class SocketServer<T> {
                 SpreadMessage received = connection.receive();
 
                 if (received.isMembership()) {
-                    logger.debug("received membership message {}", received.getMembershipInfo().getGroupID().toString());
+                    logger.debug("received membership message {}", received.getMembershipInfo().toString());
                     MembershipInfo membershipInfo = received.getMembershipInfo();
 
                     if (membershipInfo.isCausedByJoin()) {
