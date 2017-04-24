@@ -32,69 +32,61 @@ public class RailManagerTester {
         RailManager r = supplier.get();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        long start;
-        long stopTime;
-        long execution;
+        long startTime, stopTime, execTime;
 
-        String line;
+        String line, response;
         while (true) {
+            System.out.print("> ");
+
+            response = "";
             line = br.readLine();
             String[] tokens = line.split(" ");
-
             String method = tokens[0];
+
+            startTime = System.currentTimeMillis();
 
             try {
                 switch (method) {
                     case "access":
-                        start = System.currentTimeMillis();
                         boolean access = r.access(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
-                        stopTime = System.currentTimeMillis();
-                        execution =  stopTime - start;
-                        System.out.println("\n---------------------------------------------------------");
-                        System.out.println(line + ": " + access);
-                        System.out.println("'access' execution time  -> " + execution + " miliseconds");   
-                        System.out.println("---------------------------------------------------------");
+                        response = Boolean.toString(access);
                         break;
                     case "enter":
-                        start = System.currentTimeMillis();
                         r.enter(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
-                        stopTime = System.currentTimeMillis();
-                        execution =  stopTime - start;
-                        System.out.println("\n--------------------------------------------------------");
-                        System.out.println(line);
-                        System.out.println("'enter' execution time  -> " + execution + " miliseconds");
-                        System.out.println("--------------------------------------------------------");
                         break;
                     case "leave":
-                        start = System.currentTimeMillis();
                         r.leave(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
-                        stopTime = System.currentTimeMillis();
-                        execution =  stopTime - start;
-                        System.out.println("\n--------------------------------------------------------");
-                        System.out.println(line);
-                        System.out.println("'leave' execution time  -> " + execution + " miliseconds");
-                        System.out.println("--------------------------------------------------------");
                         break;
                     case "getPositions":
-                        start = System.currentTimeMillis();
                         Map<Character, Integer> positions = r.getPositions(tokens[1]);
-                        stopTime = System.currentTimeMillis();
-                        execution =  stopTime - start;
-                        System.out.println("\n---------------------------------------------------------------");
-                        System.out.println(line + ": " + positions);
-                        System.out.println("'getPositions' execution time  -> " + execution + " miliseconds"); 
-                        System.out.println("---------------------------------------------------------------");
+                        response = positions.toString();
                         break;
                     case "getAlarms":
-                        start = System.currentTimeMillis();
                         List<String> alarms = r.getAlarms();
-                        stopTime = System.currentTimeMillis();
-                        execution =  stopTime - start;
-                        System.out.println("\n------------------------------------------------------------");
-                        System.out.println(line + ": " + alarms);
-                        System.out.println("'getAlarms' execution time  -> " + execution + " miliseconds"); 
-                        System.out.println("------------------------------------------------------------");
+                        response = alarms.toString();
+                        break;
+                    case "exit":
+                        return;
+                    case "help":
+                    default:
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("Usage").append("\n");
+                        sb.append("\t").append("access <rail_name> <segment_number> <composition_char>").append("\n");
+                        sb.append("\t").append("enter <rail_name> <segment_number> <composition_char>").append("\n");
+                        sb.append("\t").append("leave <rail_name> <segment_number> <composition_char>").append("\n");
+                        sb.append("\t").append("getPositions <rail_name>").append("\n");
+                        sb.append("\t").append("getAlarms").append("\n");
+                        sb.append("\t").append("exit").append("\n");
+                        
+                        System.out.println(sb.toString());
+                        continue;
                 }
+
+                stopTime = System.currentTimeMillis();
+                execTime = stopTime - startTime;
+
+                System.out.print(response);
+                System.out.println("\t(" + execTime + "ms)");
             } catch (Exception e) {
                 logger.trace("client error {}", e);
             }
