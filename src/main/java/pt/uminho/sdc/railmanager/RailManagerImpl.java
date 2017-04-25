@@ -32,15 +32,19 @@ public class RailManagerImpl implements RailManager, Serializable {
     }
 
     @Override
-    public void enter(String line, int segment, char composition) {
+    public boolean enter(String line, int segment, char composition) {
+        boolean res = true;
         if (!this.access(line, segment, composition)) {
             this.alarms.add("Line: " + line + "; Segment: " + segment + "; Composition: " + composition + ".");
+            res = false;
         }
 
         if (this.rails.containsKey(line)) {
             Rail rail = this.rails.get(line);
             rail.addPresence(composition, segment);
         }
+        
+        return res;
     }
 
     @Override

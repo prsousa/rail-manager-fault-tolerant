@@ -21,6 +21,7 @@ public class RailManagerTester {
     private Stage stage;
     private int nops;
     private long totalrtt;
+    private int totalalarms;
 
     //@FunctionalInterface
     public interface RailManagerSupplier {
@@ -40,6 +41,8 @@ public class RailManagerTester {
     }
 
     public void test() throws InterruptedException, Exception {
+        showHelpMessage();
+        
         RailManager r = supplier.get();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -85,6 +88,9 @@ public class RailManagerTester {
                         this.stage = Stage.Warmup;
                         this.nops = 0;
                         this.totalrtt = 0;
+                        this.totalalarms = 0;
+
+                        int initialAlarms = r.getAlarms().size();
 
                         Worker worker[] = new Worker[numThreads];
 
@@ -126,20 +132,18 @@ public class RailManagerTester {
 
                         logger.info("performance: {} ops, {} ops/s, {} s", nops, nops / ((after - before) / 1e9d), (totalrtt / 1e9d) / nops);
 
+                        int resultingAlarms = r.getAlarms().size();
+
+                        if (initialAlarms + totalalarms == resultingAlarms) {
+                            logger.info("test PASSED: final alarms matches operations");
+                        } else {
+                            logger.error("test FAILED: final alarms does not match operations");
+                        }
+
                         break;
                     case "help":
                     default:
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("Usage").append("\n");
-                        sb.append("\t").append("access <rail_name> <segment_number> <composition_char>").append("\n");
-                        sb.append("\t").append("enter <rail_name> <segment_number> <composition_char>").append("\n");
-                        sb.append("\t").append("leave <rail_name> <segment_number> <composition_char>").append("\n");
-                        sb.append("\t").append("getPositions <rail_name>").append("\n");
-                        sb.append("\t").append("getAlarms").append("\n");
-                        sb.append("\t").append("exit").append("\n");
-                        sb.append("\t").append("test [seconds] [thread_number]").append("\n");
-
-                        System.out.println(sb.toString());
+                        showHelpMessage();
                         continue;
                 }
 
@@ -153,7 +157,22 @@ public class RailManagerTester {
             }
         }
     }
+    
+    private static void showHelpMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Usage").append("\n");
+        sb.append("\t").append("test [seconds=10] [number_threads=1]").append("\n");
+        sb.append("\t").append("access <rail_name> <segment_number> <composition_char>").append("\n");
+        sb.append("\t").append("enter <rail_name> <segment_number> <composition_char>").append("\n");
+        sb.append("\t").append("leave <rail_name> <segment_number> <composition_char>").append("\n");
+        sb.append("\t").append("getPositions <rail_name>").append("\n");
+        sb.append("\t").append("getAlarms").append("\n");
+        sb.append("\t").append("help").append("\n");
+        sb.append("\t").append("exit").append("\n");
 
+        System.out.println(sb.toString());
+    }
+    
     private static enum Stage {
         Warmup, Run, Shutdown, Error
     };
@@ -175,7 +194,8 @@ public class RailManagerTester {
         return this.stage == stage;
     }
 
-    private synchronized void log(long delta) {
+    private synchronized void log(long delta, int alarms) {
+        totalalarms += alarms;
         if (stage != Stage.Run) {
             return;
         }
@@ -201,24 +221,24 @@ public class RailManagerTester {
                     String rail = rails[railId];
                     int numberSegments = rails_segments[railId];
                     char composition = (char) ('A' + random.nextInt(number_compositions));
-                    
+
                     long before = System.nanoTime();
                     boolean canAccess = r.access(rail, numberSegments, composition);
                     long after = System.nanoTime();
-                    log(after - before);
-                    
-                    if( canAccess ) {
+                    log(after - before, 0);
+
+                    if (canAccess) {
                         before = System.nanoTime();
-                        r.enter(rail, numberSegments, composition);
+                        boolean succ = r.enter(rail, numberSegments, composition);
                         after = System.nanoTime();
-                        
+
                         before = System.nanoTime();
-                        log(after - before);
+                        log(after - before, succ ? 0 : 1);
                         r.leave(rail, numberSegments, composition);
                         after = System.nanoTime();
-                        log(after - before);
+                        log(after - before, 0);
                     }
-                    
+
                 }
             } catch (Exception e) {
                 logger.error("worker stopping on exception", e);

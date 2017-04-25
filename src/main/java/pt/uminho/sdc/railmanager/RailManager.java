@@ -11,7 +11,7 @@ import pt.uminho.sdc.cs.RemoteInvocationException;
 
 public interface RailManager {
     boolean access(String line, int segment, char composition) throws RemoteInvocationException;
-    void enter(String line, int segment, char composition) throws RemoteInvocationException;
+    boolean enter(String line, int segment, char composition) throws RemoteInvocationException;
     void leave(String line, int segment, char composition) throws RemoteInvocationException;
     Map<Character, Integer> getPositions(String line) throws RemoteInvocationException;
     List<String> getAlarms() throws RemoteInvocationException;

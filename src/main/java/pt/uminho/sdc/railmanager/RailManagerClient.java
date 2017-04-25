@@ -19,8 +19,8 @@ public class RailManagerClient implements RailManager {
     }
 
     @Override
-    public void enter(String line, int segment, char composition) throws RemoteInvocationException {
-        client.request(new RailManagerEnterRequest(line, segment, composition));
+    public boolean enter(String line, int segment, char composition) throws RemoteInvocationException {
+        return client.request(new RailManagerEnterRequest(line, segment, composition));
     }
 
     @Override
