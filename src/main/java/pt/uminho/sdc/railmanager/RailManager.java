@@ -13,6 +13,6 @@ public interface RailManager {
     boolean access(String line, int segment, char composition) throws RemoteInvocationException;
     boolean enter(String line, int segment, char composition) throws RemoteInvocationException;
     void leave(String line, int segment, char composition) throws RemoteInvocationException;
-    Map<Character, Integer> getPositions(String line) throws RemoteInvocationException;
+    Map<Integer, char[]> getPositions(String line) throws RemoteInvocationException;
     List<String> getAlarms() throws RemoteInvocationException;
 }

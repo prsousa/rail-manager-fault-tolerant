@@ -29,7 +29,7 @@ public class RailManagerClient implements RailManager {
     }
 
     @Override
-    public Map<Character, Integer> getPositions(String line) throws RemoteInvocationException {
+    public Map<Integer, char[]> getPositions(String line) throws RemoteInvocationException {
         return client.request(new RailManagerPositionsRequest(line));
     }
 

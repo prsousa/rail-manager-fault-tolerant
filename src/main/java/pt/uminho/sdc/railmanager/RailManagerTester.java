@@ -66,14 +66,23 @@ public class RailManagerTester {
                         response = Boolean.toString(access);
                         break;
                     case "enter":
-                        r.enter(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
+                        boolean succ = r.enter(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
+                        response = Boolean.toString(succ);
                         break;
                     case "leave":
                         r.leave(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
                         break;
                     case "getPositions":
-                        Map<Character, Integer> positions = r.getPositions(tokens[1]);
-                        response = positions.toString();
+                        Map<Integer, char[]> positions = r.getPositions(tokens[1]);
+                        StringBuilder sb = new StringBuilder();
+                        for( int seg : positions.keySet() ) {
+                            sb.append(seg).append("\t");
+                            for( char c : positions.get(seg) ) {
+                                sb.append(c).append(" ");
+                            }
+                            sb.append("\n");
+                        }
+                        response = sb.toString();
                         break;
                     case "getAlarms":
                         List<String> alarms = r.getAlarms();
@@ -219,22 +228,22 @@ public class RailManagerTester {
                 while (isRunning()) {
                     int railId = random.nextInt(rails.length);
                     String rail = rails[railId];
-                    int numberSegments = rails_segments[railId];
+                    int segment = random.nextInt(rails_segments[railId]);
                     char composition = (char) ('A' + random.nextInt(number_compositions));
 
                     long before = System.nanoTime();
-                    boolean canAccess = r.access(rail, numberSegments, composition);
+                    boolean canAccess = r.access(rail, segment, composition);
                     long after = System.nanoTime();
                     log(after - before, 0);
 
                     if (canAccess) {
                         before = System.nanoTime();
-                        boolean succ = r.enter(rail, numberSegments, composition);
+                        boolean succ = r.enter(rail, segment, composition);
                         after = System.nanoTime();
 
                         before = System.nanoTime();
                         log(after - before, succ ? 0 : 1);
-                        r.leave(rail, numberSegments, composition);
+                        r.leave(rail, segment, composition);
                         after = System.nanoTime();
                         log(after - before, 0);
                     }

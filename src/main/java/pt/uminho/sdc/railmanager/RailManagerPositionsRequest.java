@@ -4,7 +4,7 @@ import java.util.Map;
 import pt.uminho.sdc.cs.Request;
 import pt.uminho.sdc.cs.RemoteInvocationException;
 
-public class RailManagerPositionsRequest extends Request<RailManager, Map<Character, Integer>> {
+public class RailManagerPositionsRequest extends Request<RailManager, Map<Integer, char[]>> {
 
     private final String line;
 
@@ -13,7 +13,7 @@ public class RailManagerPositionsRequest extends Request<RailManager, Map<Charac
     }
 
     @Override
-    public Map<Character, Integer> apply(RailManager state) throws RemoteInvocationException {
+    public Map<Integer, char[]> apply(RailManager state) throws RemoteInvocationException {
         return state.getPositions(line);
     }
 

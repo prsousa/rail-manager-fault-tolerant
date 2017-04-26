@@ -7,31 +7,37 @@ package pt.uminho.sdc.railmanager;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 class Rail implements Serializable {
-
-    private final int nSegments;
-    private final Map<Character, Integer> ocuppancy;
+    private final Set<Character> ocuppancy[];
 
     public Rail(int nSegments) {
-        this.nSegments = nSegments;
-        this.ocuppancy = new HashMap<>();
+        this.ocuppancy = new Set[nSegments];
+        for(int i = 0; i < nSegments; i++) {
+            this.ocuppancy[i] = new HashSet<>();
+        }
     }
 
     public boolean haveSegment(int segment) {
-        return segment >= 0 && this.nSegments >= segment;
+        return segment >= 0 && this.ocuppancy.length >= segment;
     }
 
     public boolean isAccessible(char composition, int segment) {
         if (!this.haveSegment(segment)) {
             return false;
         }
-
-        for (char c : this.ocuppancy.keySet()) {
-            int p = this.ocuppancy.get(c);
-            if (c != composition && Math.abs(p - segment) <= 1) {
-                return false;
+        
+        int prevSegment = Math.max(0, segment - 1);
+        int nextSegment = Math.min(this.ocuppancy.length, segment + 1);
+        
+        for (int i = prevSegment; i < nextSegment; i++) {
+            for(char c : this.ocuppancy[i]) {
+                if( c != composition ) {
+                    return false;
+                }
             }
         }
 
@@ -40,20 +46,27 @@ class Rail implements Serializable {
 
     public void addPresence(char composition, int segment) {
         if (this.haveSegment(segment)) {
-            this.ocuppancy.put(composition, segment);
+            this.ocuppancy[segment].add(composition);
         }
     }
 
     public void removePresence(char composition, int segment) {
-        this.ocuppancy.remove(composition, segment);
+        if (this.haveSegment(segment)) {
+            this.ocuppancy[segment].remove(composition);
+        }
     }
 
-    public Map<Character, Integer> getPositions() {
-        Map<Character, Integer> res = new HashMap<>();
-
-        for (char c : this.ocuppancy.keySet()) {
-            int position = this.ocuppancy.get(c);
-            res.put(c, position);
+    public Map<Integer, char[]> getPositions() {
+        Map<Integer, char[]> res = new HashMap<>();
+        
+        for(int seg = 0; seg < this.ocuppancy.length; seg++) {
+            char comp[] = new char[this.ocuppancy[seg].size()];
+            int i = 0;
+            for( char c : this.ocuppancy[seg] ) {
+                comp[i++] = c;
+            }
+            
+            res.put(seg, comp);
         }
 
         return res;
@@ -61,6 +74,6 @@ class Rail implements Serializable {
 
     @Override
     public String toString() {
-        return "\tRail{" + "nSegments=" + nSegments + ", ocuppancy=" + ocuppancy + '}';
+        return "\tRail{ocuppancy=" + ocuppancy + '}';
     }
 }

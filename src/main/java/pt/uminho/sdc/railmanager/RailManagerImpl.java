@@ -58,7 +58,7 @@ public class RailManagerImpl implements RailManager, Serializable {
     }
 
     @Override
-    public Map<Character, Integer> getPositions(String line) {
+    public Map<Integer, char[]> getPositions(String line) {
         Rail rail = this.rails.get(line);
         return rail.getPositions();
     }
