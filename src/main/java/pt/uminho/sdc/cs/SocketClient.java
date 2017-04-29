@@ -22,7 +22,7 @@ public class SocketClient<T> implements Client<T> {
     private int lastSentId = 0;
 
     public SocketClient() throws IOException, SpreadException {
-        String name = "cli" + Math.round(Math.random() * 1000);
+        String name = "cli" + Math.round(Math.random() * System.nanoTime());
         connection = new SpreadConnection();
         connection.connect(InetAddress.getByName("localhost"), 4803, name, false, false);
     }

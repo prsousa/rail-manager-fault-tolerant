@@ -35,7 +35,7 @@ public class RailManagerImpl implements RailManager, Serializable {
     public boolean enter(String line, int segment, char composition) {
         boolean res = true;
         if (!this.access(line, segment, composition)) {
-            this.alarms.add("Line: " + line + "; Segment: " + segment + "; Composition: " + composition + ".");
+            this.alarms.add("L" + line + "S" + segment + "C" + composition);
             res = false;
         }
 
