@@ -250,9 +250,9 @@ public class RailManagerTester {
                         before = System.nanoTime();
                         boolean succ = r.enter(rail, segment, composition);
                         after = System.nanoTime();
-
-                        before = System.nanoTime();
                         log(after - before, succ ? 0 : 1);
+                        
+                        before = System.nanoTime();
                         r.leave(rail, segment, composition);
                         after = System.nanoTime();
                         log(after - before, 0);
