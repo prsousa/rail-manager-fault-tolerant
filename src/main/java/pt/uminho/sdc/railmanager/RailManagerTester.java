@@ -72,9 +72,18 @@ public class RailManagerTester {
                     case "leave":
                         r.leave(tokens[1], Integer.valueOf(tokens[2]), tokens[3].charAt(0));
                         break;
+                    case "getRails":
+                        Map<String, Integer> rls = r.getRails();
+                        StringBuilder sb = new StringBuilder();
+                        for( String railName : rls.keySet() ) {
+                            int nSeg = rls.get(railName);
+                            sb.append(railName).append("\t").append(nSeg).append("\n");
+                        }
+                        response = sb.toString();
+                        break;
                     case "getPositions":
                         Map<Integer, char[]> positions = r.getPositions(tokens[1]);
-                        StringBuilder sb = new StringBuilder();
+                        sb = new StringBuilder();
                         for( int seg : positions.keySet() ) {
                             sb.append(seg).append("\t");
                             for( char c : positions.get(seg) ) {
@@ -91,9 +100,9 @@ public class RailManagerTester {
                     case "exit":
                         return;
                     case "test":
-                        int time = (tokens.length >= 2) ? Integer.valueOf(tokens[1]) : 10;
+                        int numThreads = (tokens.length >= 2) ? Integer.valueOf(tokens[1]) : 1;
+                        int time = (tokens.length >= 3) ? Integer.valueOf(tokens[2]) : 10;
                         time *= 1000;
-                        int numThreads = (tokens.length >= 3) ? Integer.valueOf(tokens[2]) : 1;
                         this.stage = Stage.Warmup;
                         this.nops = 0;
                         this.totalrtt = 0;
@@ -170,10 +179,11 @@ public class RailManagerTester {
     private static void showHelpMessage() {
         StringBuilder sb = new StringBuilder();
         sb.append("Usage").append("\n");
-        sb.append("\t").append("test [seconds=10] [number_threads=1]").append("\n");
+        sb.append("\t").append("test [number_threads=1] [seconds=10]").append("\n");
         sb.append("\t").append("access <rail_name> <segment_number> <composition_char>").append("\n");
         sb.append("\t").append("enter <rail_name> <segment_number> <composition_char>").append("\n");
         sb.append("\t").append("leave <rail_name> <segment_number> <composition_char>").append("\n");
+        sb.append("\t").append("getRails").append("\n");
         sb.append("\t").append("getPositions <rail_name>").append("\n");
         sb.append("\t").append("getAlarms").append("\n");
         sb.append("\t").append("help").append("\n");

@@ -15,4 +15,5 @@ public interface RailManager {
     void leave(String line, int segment, char composition) throws RemoteInvocationException;
     Map<Integer, char[]> getPositions(String line) throws RemoteInvocationException;
     List<String> getAlarms() throws RemoteInvocationException;
+    Map<String, Integer> getRails() throws RemoteInvocationException;
 }

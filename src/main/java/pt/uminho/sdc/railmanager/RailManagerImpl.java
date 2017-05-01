@@ -73,6 +73,17 @@ public class RailManagerImpl implements RailManager, Serializable {
 
         return res;
     }
+    
+    @Override
+    public Map<String, Integer> getRails() {
+        Map<String, Integer> res = new HashMap<>();
+        
+        for(String railName : this.rails.keySet()) {
+            res.put(railName, this.rails.get(railName).getNumberSegments());
+        }
+        
+        return res;
+    }
 
     public void addRail(String name, Rail rail) {
         this.rails.put(name, rail);

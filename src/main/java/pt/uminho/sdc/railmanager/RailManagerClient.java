@@ -37,4 +37,9 @@ public class RailManagerClient implements RailManager {
     public List<String> getAlarms() throws RemoteInvocationException {
         return client.request(new RailManagerAlarmsRequest());
     }
+
+    @Override
+    public Map<String, Integer> getRails() throws RemoteInvocationException {
+        return client.request(new RailManagerRailsRequest());
+    }
 }

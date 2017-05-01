@@ -20,9 +20,13 @@ class Rail implements Serializable {
             this.ocuppancy[i] = new HashSet<>();
         }
     }
+    
+    public int getNumberSegments() {
+        return this.ocuppancy.length;
+    }
 
     public boolean haveSegment(int segment) {
-        return segment >= 0 && this.ocuppancy.length >= segment;
+        return segment >= 0 && this.getNumberSegments() >= segment;
     }
 
     public boolean isAccessible(char composition, int segment) {
